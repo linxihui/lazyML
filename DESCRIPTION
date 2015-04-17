@@ -1,0 +1,26 @@
+Package: lazyML
+Type: Package
+Title: Automatic machine learning algorithms and hyper-parameters selection
+Version: 0.1.0
+Date: 2015-04-15
+Author: Eric Xihui Lin
+Maintainer: Eric Xihui Lin <xihuil.silence@gmail.com>
+Depends:
+    R (>= 3.0.1),
+    plyr,
+    survival
+Imports:
+    foreach,
+    caret,
+    parallel,
+    pROC
+Suggests:
+    doMC,
+    randomForest,
+    gbm,
+    glmnet,
+    mboost,
+    mlbench
+Description: This package is built upon the caret package by Max Kuhn, with
+    auto algorithm selection and hyper-parameter tuning, and feature selection.
+License: GPL-2

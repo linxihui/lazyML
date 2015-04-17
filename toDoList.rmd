@@ -1,0 +1,49 @@
+- About mpTune:
+	+ track on start time, running time, memory usage, warning and error messages in the tuning loop and summary procedure.
+
+- survival support and test (remember that some prediciton gives risk instead of survival time!)
+	+ survival support and test (DONE!)
+	+ need more survival models (coxph, RandomForestSRC, cforest, earth, mboost, ...)
+	+ insistant prediction(some are survival times some are risk score): which is mostly the case? if both, how to solve this issue? (CURRENTLY just reverse the result if CI < 0.5, corr < 0)
+- test on regression
+- a script for SGE support, run in background and wait to collect results
+- a fit function to automatically fit the best models
+-  (DONE) CV or bootstrap for predictability estimate (support 2 levels of parallel)
+- print fitting progress?  Add logging: start time of the whole fiting, running time/memory of each model
+
+ ```{r}
+ mpTune.default(
+ 	x, y, weights, 
+ 	modelList = list(RF = 'rf', balancedRF = 'rf', 'gbm'),
+	modelControl = list(
+		balancedRF = list(sampsize = quote(rep(min(table(y)),2))),
+		gbm = list(verbose = TRUE)),
+	preProcessControl = list(FUN = PCA, nPC = c(2,3,4), ...),
+	tuningControl = list(
+		tuneGrid = list(rf = ....), 
+		gridLength = 5, randomizedLength = 20,
+		FUN = makeTuneGrid,
+		...),
+	samplingControl = list(
+		FUN = createCVFolds, args = ..., 
+		trainIndex = NULL, 
+		testIndex = NULL, 
+		returnSample = TRUE),
+	performanceControl = list(
+		FUN = defaultSummary, args = ..., 
+		metric = NA,
+		targetMetric = 'AUC'),
+	parallelControl = list(backend = 'doMC', batchSize = 10),
+	extraControl = list(
+		classProbs = TRUE, 
+		survivalPrediction = 'risk', 
+		returnData = TRUE,
+		returnPrediction = TRUE,
+		seeds = NA)
+	);
+mpTune.data(data, ...)
+# save all these controls as mpTuneControl
+
+Oneplus(data) %>% preProcess() %>% sampling() %>% sampling() %>% modelBlender(preProcess(), modelList, modelControl) %>% tuning(, performance()) %>% bestFit %>% run();
+
+ ```

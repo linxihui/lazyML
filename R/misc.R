@@ -1,4 +1,5 @@
-makeloops <- function(modelInfo, modelControl, models.tuneGrids, sampleIndex) {
+# @description Genearal flatten iteration
+makeLoops <- function(modelInfo, modelControl, models.tuneGrids, sampleIndex) {
 	models <- names(modelInfo);
 	expand.model <- foreach(
 		this.model     = models,
@@ -28,6 +29,7 @@ makeloops <- function(modelInfo, modelControl, models.tuneGrids, sampleIndex) {
 	}
 
 
+# @description Generate tuning grid. Use randomized search if possible, otherwise grid search as in caret
 makeTuneGrid <- function(x, y, modelInfo, gridLength, randomizedLength) {
 	mapply(
 		FUN = function(this.model, this.glen, this.rlen) {
@@ -58,7 +60,7 @@ makeTuneGrid <- function(x, y, modelInfo, gridLength, randomizedLength) {
 		pred <- data.frame('obs' = obs, 'pred' = pred, prob, check.names = FALSE); 
 		}
 	perf <- summaryFunction(
-		pred, #data.frame(obs = obs, pred, check.names = FALSE), 
+		pred,  
 		lev = lev, model = model
 		);
 	return(t(perf));
@@ -79,8 +81,10 @@ makeTuneGrid <- function(x, y, modelInfo, gridLength, randomizedLength) {
 			);
 		}
 	perf <- foreach(this.pred = pred, .combine = rbind) %do% {
-		summaryFunction(data.frame(obs = obs, this.pred, check.names = FALSE), 
-			lev = lev, model = model, is.prob = !is.null(prob))
+		summaryFunction(
+			data.frame(obs = obs, this.pred, check.names = FALSE), 
+			lev = lev, model = model, is.prob = !is.null(prob)
+			)
 		}
 	rownames(perf) <- names(pred);
 	return(perf);
@@ -90,27 +94,28 @@ makeTuneGrid <- function(x, y, modelInfo, gridLength, randomizedLength) {
 reducePerformance <- function(performanceList, tuneGridList, modelInfo, parallel = FALSE) {
 	`%op%` <- if (parallel) `%dopar%` else `%do%`;
 	performanceListReduced <- foreach(
-			thisModelPerf = performanceList, 
-			thisTuneGrid = tuneGridList, 
-			thisInfo = modelInfo, 
-			.errorhandling = 'remove'
-			) %op% {
+		thisModelPerf = performanceList, 
+		thisTuneGrid = tuneGridList, 
+		thisInfo = modelInfo, 
+		.errorhandling = 'remove'
+	) %op% {
 		perf <- plyr::ddply(
 			.data = thisModelPerf[, 
-					setdiff(
-							names(thisModelPerf), 
-							c('node', 'size', 'status', 'message', 'resample')
-							), 
-					drop = FALSE
-					],
+			setdiff(
+				names(thisModelPerf), 
+				c('node', 'size', 'status', 'message', 'resample')
+				), 
+			drop = FALSE
+			],
 			.variables = names(thisTuneGrid$loop),
 			.fun       = meanSD,
 			exclude    = names(thisTuneGrid$loop)
 			);
 		if (!is.null(thisInfo$sort)) {
+			# if multiple 'best model', choose the first one after this sorting.
 			perf <- thisInfo$sort(perf); 
-			} # if multiple 'best model', choose the first one after this sorting.
-		return(perf); # list(perf = perf);
+			} 
+		return(perf); 
 		}
 	names(performanceListReduced) <- names(performanceList);
 	return(performanceListReduced);
@@ -153,9 +158,23 @@ meanSD <- function(x, exclude=NULL) {
 	return(c(mean.x, sd.x));
 	}
 
-# TODO: rename the following function (thus, need to change all model information having using this function
-# This function was taken from package 'kernlab' and modified by Eric, to generate REASONABLE random guess of
-# the Gaussian kernel scale parameter
+
+#' @title Interal functions
+#' @param x          Design matrix
+#' @param frac       Fraction of data used
+#' @param scaled     If to scale column in x
+#' @param na.action  How to handle missing values
+#' @param len        Number of sigma inverse values to general
+#' @param squared    If squared terms should be added
+#' @return A vector of of sigma inverse values
+#' @details
+#' \code{sigest.random} is a modified version of \code{kernlab::sigest}, aiming to generate 
+#' tuning parameters for sigmal inverse of an RBF kernel, base on \code{kernlab::sigest}. It returns
+#' a vector of sigma inverse value. For details, see \code{kernlab::sigest}.
+#' \code{addInteraction} adds 2-way interactions and/or squared terms to the design matrix.
+#
+#' @seealso Please see kernlab::sigest for details
+#' @export
 sigest.random <- function (x, frac = 0.5, scaled = TRUE, na.action = na.omit, len = 3) {
 	x <- na.action(x);
 	if (1 == length(scaled)) { scaled <- rep(scaled, ncol(x)); }
@@ -179,4 +198,28 @@ sigest.random <- function (x, frac = 0.5, scaled = TRUE, na.action = na.omit, le
 	dist   <- rowSums(temp^2);
 	srange <- 1/quantile(dist[dist != 0], probs = runif(len));
 	return(srange);
+	}
+
+
+#' @rdname sigest.random
+#' @export
+addInteraction <- function(x, squared = TRUE) {
+	if (!is.matrix(x) || !is.data.frame(x)) x <- as.matrix(x);
+	if(1 != ncol(x)) {
+		x2 <- do.call(cbind, 
+			lapply(
+				X = 1:(ncol(x)-1), 
+				FUN = function(i) {
+					sapply((i+1):ncol(x), function(j) x[,i]*x[,j])
+					}
+				)
+			);
+		} else x2 <- NULL;
+	if (!is.null(x2)) {
+		x2 <- x2[, apply(x2, 2, sd, na.rm = TRUE) > 0, drop = TRUE];
+		}
+	if (squared) {
+		x <- cbind(x, (x^2)[, apply(x - x^2, 2, sd, na.rm = TRUE) > 0, drop = TRUE]);
+		}
+	return(cbind(x, x2));
 	}

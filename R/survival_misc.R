@@ -41,12 +41,7 @@ SCI <- function(alpha = 1) {
 	}
 
 
-# suppressMessages(require(survival, quietly = TRUE));
-
-# define length for `Surv` object
-# length.Surv <- function(x) nrow(x);
-
-## extend the survival 
+## extend the survival prediction function
 #' @title predict coxph model
 #' @description 
 #' extend survival::predict.coxph to give 'median', 'mean' and a vector a survial quantile
@@ -80,12 +75,12 @@ predict.coxph <- function(
 
 #' @title get survival quantiles
 #' @description
-#' get survival quantiles from survival curves for each sample
-#' @param surv.percentile: a vector of survival probabilities.
-#' @param prediction: a matrix of survival probilites, with row = sample, col = time
-#' @param times: a vector of times of interest
-#' @param max.surv.time: Usually maximum follow-up time
-#' @return a matrix of survival quantitles (times), with row = sample, col = surv.percentile
+#' Get survival quantiles from survival curves for each sample
+#' @param surv.percentile  A vector of survival probabilities.
+#' @param prediction       A matrix of survival probilites, with row = sample, col = time
+#' @param times            A vector of times of interest
+#' @param max.surv.time    Usually maximum follow-up time
+#' @return A matrix of survival quantitles (times), with row = sample, col = surv.percentile
 #' @export
 survival.quantiles <- function(surv.percentile = 0.5, prediction, times, max.surv.time = max(times)) {
 	times.order <- order(times);

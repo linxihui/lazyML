@@ -5,13 +5,12 @@
 \alias{summary.mpTune}
 \title{summarize result from \code{\link{mpTune}}}
 \usage{
-\method{summary}{mpTune}(object, metric = object$performanceMetric,
+summary.mpTune(object, metric = object$performanceMetric,
   maximize = sapply(metric, function(x) ifelse(x \%in\% c("RMSE", "MAE"),
   FALSE, TRUE)), by = c("metric", "model"), ...)
 
-\method{print}{summarizedMpTune}(x, indent = rep(" ", 4), prefix = c("-",
-  "-", "+"), digits = 3, justify = c("left", "right", "center", "none"),
-  ...)
+print.summarizedMpTune(x, indent = rep(" ", 4), prefix = c("-", "-", "+"),
+  digits = 3, justify = c("left", "right", "center", "none"), ...)
 }
 \arguments{
 \item{object}{A 'mpTune' object or a 'summarizedMpTune' object}

@@ -83,9 +83,6 @@ if (require(mlbench)) {
     training   <- Sonar[inTraining, ];
     testing    <- Sonar[-inTraining, ];
 
-    x <- model.matrix(Class ~ ., training)[, -1];
-    y <- training$Class;
-
     sonarTuned <- mpTune(
         formula = Class ~. ,
         data = training,
@@ -114,7 +111,7 @@ if (require(mlbench)) {
     print(bestModel);
 
     # predict on hold out sample
-    # sonarTestPred <- predict(bestModel, newdata = test);
+    # sonarTestPred <- predict(bestModel, newdata = testing);
 
     # perform a cross validation for a fair performance estimate cosidering multiple model tunings and selections
     sonarTunedPerf <- resample(sonarTuned, nfold = 3, repeats = 1, stratify = TRUE);

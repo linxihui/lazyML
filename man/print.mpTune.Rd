@@ -4,7 +4,7 @@
 \alias{print.mpTune}
 \title{print mpTune result}
 \usage{
-\method{print}{mpTune}(x, metric = x$performanceMetric[1], digits = 4,
+print.mpTune(x, metric = x$performanceMetric[1], digits = 4,
   row.names = FALSE, ...)
 }
 \arguments{

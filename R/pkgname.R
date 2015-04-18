@@ -12,10 +12,8 @@ NULL
 
 
 
-# @importFrom survival Surv is.Surv coxph survfit survreg survConcordance.fit
 #' @importFrom caret checkInstall probFunction predictionFunction
 #' @importFrom pROC roc.default
-# @importFrom plyr ddply llply mlply laply daply maply
 #' @importFrom parallel mclapply parLapply parLapplyLB
 #' @import foreach
 NULL

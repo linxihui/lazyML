@@ -79,7 +79,6 @@ print(sonarTuned)
 
 Note the above tuning only use one 1 level of cross validation, to simultaneously select model and its hyper-parameters.
 
-<br>
 
 To see ranks of all models by metric,
 
@@ -168,7 +167,6 @@ summary(sonarTuned)
 
 Meanings of bracket symbols above: [minimum, maximum], {value 1, value 2, ..., value k}, (standard deviation).
 
-<br>
 
 To add more models using the same resamples and performance metric
 
@@ -205,7 +203,6 @@ sonarTestPred <- predict(bestModel, newdata = testing);
 ## submodels = param): kernlab class prediction calculations failed;
 ## returning NAs
 ```
-<br>
 
 Since we have tune on a list of models, each of which has a list of hyper-parameter configurations, the performance of the best
 model from the output of `mpTune` is biased (selection bias).  To account for this selection bias, we will either evaluate our
@@ -240,13 +237,11 @@ checkConsistency(sonarTunedPerf);
 ## resample consistency 0.6 0.7333333 0.7333333
 ```
 
-<br>
 
 ## Regression
 
 Similar to classification.
 
-<br>
 
 ## Survival 
 

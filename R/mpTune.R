@@ -43,7 +43,7 @@
 #' @examples
 #' \dontrun{
 #'
-#' if (required(doMC) && detectCores() > 2) {
+#' if (require(doMC) && detectCores() > 2) {
 #'     registerDoMC(cores = detectCores());
 #'     }
 #' 

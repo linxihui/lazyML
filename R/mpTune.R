@@ -42,9 +42,10 @@
 #'
 #' @examples
 #' \dontrun{
-#' # turn on the  following two statements if a multicore parallel is requested.
-#' # library(doMC);
-#' # registerDoMC(cores = detectCores());
+#'
+#' if (required(doMC) && detectCores() > 2) {
+#'     registerDoMC(cores = detectCores());
+#'     }
 #' 
 #' if (require(mlbench)) {
 #'     data(Sonar, package = 'mlbench');
@@ -71,23 +72,23 @@
 #'             )
 #'         );
 #' 
-#'     print(sonarTuned)
-#'     summary(sonarTuned)
+#'     print(sonarTuned);
+#'     print(summary(sonarTuned));
 #' 
-#' # tune more model
+#'     # tune more model
 #'     sonarTuned <- more(sonarTuned, models = 'glmnet');
 #'      
-#' # Now sonarTuned contains tuning information of four models: balancedRF, rf, gbm and glmnet
-#' # fit the model giving the best 'AUC' 
+#'     # Now sonarTuned contains tuning information of four models: balancedRF, rf, gbm and glmnet
+#'     # fit the model giving the best 'AUC' 
 #'     bestModel <- fit(sonarTuned, metric = 'AUC')
-#'     bestModel
+#'     print(bestModel);
 #' 
-#' # predict on hold out sample
-#' # sonarTestPred <- predict(bestModel, newdata = test);
+#'     # predict on hold out sample
+#'     # sonarTestPred <- predict(bestModel, newdata = test);
 #' 
-#' # perform a cross validation for a fair performance estimate cosidering multiple model tunings and selections
+#'     # perform a cross validation for a fair performance estimate cosidering multiple model tunings and selections
 #'     sonarTunedPerf <- resample(sonarTuned, nfold = 3, repeats = 1, stratify = TRUE);
-#'     sonarTunedPerf
+#'     print(sonarTunedPerf);
 #'     }
 #' 
 #' ## 
@@ -95,13 +96,12 @@
 #' ##
 #' 
 #' # check what models are avaible for right censored survival data
-#' getDefaultModel(10, type = 'survival')
-#' 
+#' print(getDefaultModel(type = 'survival'))
 #' 
 #' if (require(randomForestSRC)) {
 #'     data(pbc, package = 'randomForestSRC');
 #'     pbc <- na.omit(pbc);
-#' 
+#'     pbc <- pbc[sample(nrow(pbc), 100), ];
 #' 
 #'     survTune <- mpTune(
 #'         Surv(days, status) ~., 
@@ -111,7 +111,6 @@
 #'             elasticnet = 'glmnet',
 #'             gbm = 'gbm',
 #'             survivalForest = 'rfsrc',
-#'             boostedCox = 'blackboost',
 #'             boostedSCI = 'glmboost'
 #'             ),
 #'         mpTnControl = mpTuneControl(
@@ -171,7 +170,7 @@ mpTune.default <- function(
 
 	if(is.numeric(models)) {
 		models <- getDefaultModel(models, y);
-	}
+		}
 
 	N.samples <- if(is.matrix(y) || is.data.frame(y)) nrow(y) else length(y);
 	N.models <- length(models);
@@ -179,10 +178,9 @@ mpTune.default <- function(
 	randomizedLength <- rep(randomizedLength, length = N.models);
 	lev <- if (is.factor(y)) levels(y) else NULL;
 
-	perf.proto <- mpTnControl$summaryFunction(data.frame(
-					   obs = y, 
-					   pred = if(is.Surv(y)) y[, 1] else y
-					   ));
+	perf.proto <- mpTnControl$summaryFunction(
+		data.frame(obs = y, pred = if(is.Surv(y)) y[, 1] else y)
+		);
 	performance.names <- names(perf.proto); 
 
 	internalModels <- !sapply(models, is.list, USE.NAMES = FALSE);
@@ -212,38 +210,36 @@ mpTune.default <- function(
 
 	`%op%` <- if (mpTnControl$allowParallel) `%dopar%` else `%do%`;
 
-	loopList <- makeloops(modelInfo = modelInfo, modelControl = modelControl,
-					   models.tuneGrids = models.tuneGrids,
-					   sampleIndex = sampleIndex);
-
+	loopList <- makeLoops(
+		modelInfo = modelInfo, modelControl = modelControl, 
+		models.tuneGrids = models.tuneGrids, sampleIndex = sampleIndex
+		);
 	models.perf <- loopingRule(
-		executeTask,
-		loopList,
+		executeTask, loopList,
 		x = x, y = y, weights = weights, 
 		lev = lev, mpTnControl = mpTnControl, 
 		preProcess = preProcess, perf.proto = perf.proto
 		);
-
-	# if (is.null(names(models.perf))) names(models.perf) <- names(loopList);
 	modelLoopList <- sub('^(.*?)_\\._\\..*$', '\\1', names(models.perf));
 	modelLoopList <- factor(modelLoopList, models);
-	models.perf <- split(models.perf, modelLoopList);
-	models.perf <- lapply(X = models.perf, FUN = function(z) {
-					o <- do.call(rbind, z);
-					rownames(o) <- NULL;
-					return(o);
-					})
-
+	models.perf <- lapply(
+		X = split(models.perf, modelLoopList), 
+		FUN = function(z) {
+			o <- do.call(rbind, z);
+			rownames(o) <- NULL;
+			return(o);
+			}
+		);
 	# average over resamples
-	models.perf.reduced <- NULL;
-	tryCatch({
-		models.perf.reduced <- reducePerformance(
+	models.perf.reduced <- tryCatch(
+		expr = {
+			models.perf.reduced <- reducePerformance(
 				models.perf, models.tuneGrids, 
 				modelInfo, mpTnControl$allowParallel
 				);
 			}, 
-		error = function(e) {print(e);}
-		)
+		error = function(e) {print(e); NULL}
+		);
 
 	return(structure(
 		list(
@@ -264,116 +260,3 @@ mpTune.default <- function(
 		class = 'mpTune'
 		));
 	}
-
-
-executeTask <- function(
-	x, y, weights, lev, 
-	mpTnControl,
-	preProcess,
-	perf.proto,
-	this.modelControl,
-	this.model, this.info, this.tuneGrid, this.train,
-	this.foldName, i.row
-	) {
-
-	# require(caret);
-	if (interactive() && !mpTnControl$allowParallel) checkInstall(this.info$library);
-	for (pkg in c(this.info$library)) {
-		suppressPackageStartupMessages(
-				do.call(require, list(pkg, quietly = TRUE, warn.conflicts = FALSE))
-				)}
-
-	thisRow.tuneGrid <- this.tuneGrid$loop[i.row, , drop = FALSE];
-	this.submodels <- if(
-			is.null(this.tuneGrid$submodels) || !nrow(this.tuneGrid$submodels[[i.row]])
-			) NULL else this.tuneGrid$submodels[[i.row]];
-
-		tryCatch(
-			expr = {
-				mod <- do.call(createModel,
-					args = c(
-						list(
-							x          = x[this.train, , drop = FALSE],
-							y          = y[this.train],
-							wts        = if(is.null(weights)) NULL else weights[this.train],
-							method     = this.info,
-							tuneValue  = thisRow.tuneGrid,
-							obsLevels  = lev,
-							pp         = preProcess,
-							classProbs = mpTnControl$classProbs
-							),
-						this.modelControl
-						),
-				quote = TRUE);
-
-				fittingObjectSize <- object.size(mod);
-				
-				pred <- predictionFunction(
-					method   = this.info,
-					modelFit = mod$fit,
-					newdata  = x[-this.train, ,drop = FALSE],
-					preProc  = mod$preProc,
-					param    = this.submodels
-					);
-
-				prob <- NULL;
-				if (mpTnControl$classProbs && !is.null(this.info$prob) && !is.null(lev)) {
-
-					prob <- probFunction(
-						method   = this.info,
-						modelFit = mod$fit,
-						newdata  = x[-this.train, ,drop = FALSE],
-						preProc  = mod$preProc,
-						param    = this.submodels
-						);
-					}
-				rm(mod);
-				if (is.null(this.submodels)) {
-					perf <- .getPerformanceSingle(
-								summaryFunction = mpTnControl$summaryFunction, obs = y[-this.train], 
-								pred = pred, prob = prob, lev = lev, model = this.model);
-				} else {
-					perf <- .getPerformanceList(
-								summaryFunction = mpTnControl$summaryFunction, obs = y[-this.train], 
-								pred = pred, prob = prob, lev = lev, model = this.model);
-					}
-
-				fitting.status <- 0;
-				fitting.message <- '';
-
-				runningNode <- Sys.info()['nodename']; # Sys.getpid();
-				totalUsedMemory <- paste(round(sum(fittingObjectSize, 
-												   sapply(ls(), function(x) object.size(get(x)))) / 1024^2, 3), 'Mb'); 
-				out <- data.frame(
-								  node = unname(runningNode), 
-								  size = totalUsedMemory, 
-								  status = fitting.status,
-								  message = fitting.message, 
-								  resample = this.foldName, 
-								  expandParameters(thisRow.tuneGrid, this.submodels), 
-								  perf, 
-								  stringsAsFactors = FALSE,
-								  check.names = FALSE);
-				return(out);
-				},
-			error = function(e) {
-				perf <- as.data.frame(matrix(NA_real_, nrow = 1, ncol = length(perf.proto)));
-				names(perf) <- c(names(perf.proto));
-				fitting.status <- 1;
-				fitting.message <- paste(e, collapse = '\n'); #e$message;
-				runningNode <- Sys.info()['nodename'];
-				totalUsedMemory <- paste(round(sum(sapply(ls(), function(x) object.size(get(x)))) / 1024^2, 3), 'Mb'); 
-				out <- data.frame(
-								  node = unname(runningNode), 
-								  size = totalUsedMemory, 
-								  status = fitting.status,
-								  message = fitting.message, 
-								  resample = this.foldName, 
-								  expandParameters(thisRow.tuneGrid, this.submodels), 
-								  perf, 
-								  stringsAsFactors = FALSE,
-								  check.names = FALSE);
-				return(out);
-				}
-			);
-		}

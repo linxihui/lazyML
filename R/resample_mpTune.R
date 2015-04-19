@@ -79,11 +79,16 @@ resample.mpTune <- function(
 			mpTnControl = modifyList(obj$config$mpTnControl, list(returnData = FALSE, sampleIndex = NULL))
 			);
 
-		bestFit <- do.call(what = fit, 
-						   args = c(list(
-										 obj = tuneObj, x = x[this.sample, , drop = FALSE], 
-										 y = y[this.sample], weights = weights[this.sample]), 
-									summaryArgs));
+		bestFit <- do.call(
+			what = fit, 
+			args = c(
+				list(
+					obj = tuneObj, x = x[this.sample, , drop = FALSE], 
+					y = y[this.sample], weights = weights[this.sample]
+					), 
+				summaryArgs
+				)
+			);
 
 		pred <- predictionFunction(
 			method   = bestFit$modelInfo,

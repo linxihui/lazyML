@@ -129,7 +129,7 @@ reducePerformance <- function(performanceList, tuneGridList, modelInfo, parallel
 #' @examples
 #' # function twoClassSummary has an argument 'metric' which defaults to long vector of metrics,
 #' # to make a numer twoClassSummary function that returns only 'Kappa' and 'AUC', we can do
-#' newRegressionSummary <- modifyFunction(twoClassSummary, metric = c('Kappa', 'AUC'));
+#' newTwoClassSummary <- modifyFunction(twoClassSummary, metric = c('Kappa', 'AUC'));
 #' @export
 modifyFunction <- function(f, ...) {
 	dots <- list(...);

@@ -15,9 +15,9 @@
 \method{predict}{bestMpTuneModel}(object, newdata, type = c("raw", "prob"),
   ...)
 
-print.bestMpTuneModel(x, digits = 4, row.names = FALSE, ...)
+\method{print}{bestMpTuneModel}(x, digits = 4, row.names = FALSE, ...)
 
-print.resampledMpTune(x, digits = 4, ...)
+\method{print}{resampledMpTune}(x, digits = 4, ...)
 
 checkConsistency(object)
 }

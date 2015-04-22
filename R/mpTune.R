@@ -212,7 +212,7 @@ mpTune.default <- function(
 		models.tuneGrids = models.tuneGrids, sampleIndex = sampleIndex
 		);
 	models.perf <- loopingRule(
-		executeTask, loopList,
+		loopList, executeTask,
 		x = x, y = y, weights = weights, 
 		lev = lev, mpTnControl = mpTnControl, 
 		preProcess = preProcess, perf.proto = perf.proto
@@ -231,8 +231,7 @@ mpTune.default <- function(
 	models.perf.reduced <- tryCatch(
 		expr = {
 			models.perf.reduced <- reducePerformance(
-				models.perf, models.tuneGrids, 
-				modelInfo, mpTnControl$allowParallel
+				models.perf, models.tuneGrids, modelInfo
 				);
 			}, 
 		error = function(e) {print(e); NULL}

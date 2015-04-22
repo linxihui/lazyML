@@ -2,69 +2,68 @@
 # @description Execute fitting and prediction for one model with one parameter config set on one resample for mpTune
 #
 executeTask <- function(
-	x, y, weights, lev, 
-	mpTnControl, preProcess, perf.proto, 
-	this.modelControl, this.model, this.info, 
-	this.tuneGrid, this.train, this.foldName, i.row
+	task, x, y, weights, lev, 
+	mpTnControl, preProcess, perf.proto
 	) {
-	if (interactive() && !mpTnControl$allowParallel) checkInstall(this.info$library);
-	for (pkg in c(this.info$library)) {
+
+	if (interactive() && !mpTnControl$allowParallel) caret::checkInstall(task$this.info$library);
+	for (pkg in c('lazyML', task$this.info$library)) {
 		suppressPackageStartupMessages(
 			do.call(require, list(pkg, quietly = TRUE, warn.conflicts = FALSE))
 			)
 		}
-	thisRow.tuneGrid <- this.tuneGrid$loop[i.row, , drop = FALSE];
-	this.submodels <- if(
-		is.null(this.tuneGrid$submodels) || !nrow(this.tuneGrid$submodels[[i.row]])
-		) NULL else this.tuneGrid$submodels[[i.row]];
+	thisRow.tuneGrid <- task$this.tuneGrid$loop[task$i.row, , drop = FALSE];
+	task$this.submodels <- if(
+		is.null(task$this.tuneGrid$submodels) || !nrow(task$this.tuneGrid$submodels[[task$i.row]])
+		) NULL else task$this.tuneGrid$submodels[[task$i.row]];
 
 	tryCatch(
 		expr = {
 			mod <- do.call(createModel,
 				args = c(
 					list(
-						x          = x[this.train, , drop = FALSE],
-						y          = y[this.train],
-						wts        = if(is.null(weights)) NULL else weights[this.train],
-						method     = this.info,
+						x          = x[task$this.train, , drop = FALSE],
+						y          = y[task$this.train],
+						wts        = if(is.null(weights)) NULL else weights[task$this.train],
+						method     = task$this.info,
 						tuneValue  = thisRow.tuneGrid,
 						obsLevels  = lev,
 						pp         = preProcess,
 						classProbs = mpTnControl$classProbs
 						),
-					this.modelControl
+					task$this.modelControl
 					),
 				quote = TRUE);
 
 			fittingObjectSize <- object.size(mod);
 
-			pred <- predictionFunction(
-				method   = this.info,
+			pred <- caret::predictionFunction(
+				method   = task$this.info,
 				modelFit = mod$fit,
-				newdata  = x[-this.train, ,drop = FALSE],
+				newdata  = x[-task$this.train, ,drop = FALSE],
 				preProc  = mod$preProc,
-				param    = this.submodels
+				param    = task$this.submodels
 				);
 
 			prob <- NULL;
-			if (mpTnControl$classProbs && !is.null(this.info$prob) && !is.null(lev)) {
-				prob <- probFunction(
-					method   = this.info,
+			if (mpTnControl$classProbs && !is.null(task$this.info$prob) && !is.null(lev)) {
+				prob <- caret::probFunction(
+					method   = task$this.info,
 					modelFit = mod$fit,
-					newdata  = x[-this.train, ,drop = FALSE],
+					newdata  = x[-task$this.train, ,drop = FALSE],
 					preProc  = mod$preProc,
-					param    = this.submodels
+					param    = task$this.submodels
 					);
 				}
 			rm(mod); # it can be big
-			if (is.null(this.submodels)) {
+			if (is.null(task$this.submodels)) {
 				perf <- .getPerformanceSingle(
-					summaryFunction = mpTnControl$summaryFunction, obs = y[-this.train], 
-					pred = pred, prob = prob, lev = lev, model = this.model);
+					summaryFunction = mpTnControl$summaryFunction, obs = y[-task$this.train], 
+					pred = pred, prob = prob, lev = lev, model = task$this.model);
 			} else {
 				perf <- .getPerformanceList(
-					summaryFunction = mpTnControl$summaryFunction, obs = y[-this.train], 
-					pred = pred, prob = prob, lev = lev, model = this.model);
+					summaryFunction = mpTnControl$summaryFunction, obs = y[-task$this.train], 
+					pred = pred, prob = prob, lev = lev, model = task$this.model);
 				}
 
 			fitting.status <- 0;
@@ -78,8 +77,8 @@ executeTask <- function(
 				size = totalUsedMemory, 
 				status = fitting.status,
 				message = fitting.message, 
-				resample = this.foldName, 
-				expandParameters(thisRow.tuneGrid, this.submodels), 
+				resample = task$this.foldName, 
+				expandParameters(thisRow.tuneGrid, task$this.submodels), 
 				perf, 
 				stringsAsFactors = FALSE,
 				check.names = FALSE);
@@ -97,8 +96,8 @@ executeTask <- function(
 				 size = totalUsedMemory, 
 				 status = fitting.status,
 				 message = fitting.message, 
-				 resample = this.foldName, 
-				 expandParameters(thisRow.tuneGrid, this.submodels), 
+				 resample = task$this.foldName, 
+				 expandParameters(thisRow.tuneGrid, task$this.submodels), 
 				 perf, 
 				 stringsAsFactors = FALSE,
 				 check.names = FALSE);

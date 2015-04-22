@@ -91,14 +91,14 @@ makeTuneGrid <- function(x, y, modelInfo, gridLength, randomizedLength) {
 	}
 
 
-reducePerformance <- function(performanceList, tuneGridList, modelInfo, parallel = FALSE) {
-	`%op%` <- if (parallel) `%dopar%` else `%do%`;
+reducePerformance <- function(performanceList, tuneGridList, modelInfo) {
+	#`%op%` <- if (getDoParRegistered()) `%dopar%` else `%do%`;
 	performanceListReduced <- foreach(
 		thisModelPerf = performanceList, 
 		thisTuneGrid = tuneGridList, 
 		thisInfo = modelInfo, 
-		.errorhandling = 'remove'
-	) %op% {
+		.errorhandling = 'pass'
+	) %do% {
 		perf <- plyr::ddply(
 			.data = thisModelPerf[, 
 			setdiff(

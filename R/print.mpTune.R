@@ -15,7 +15,8 @@ print.mpTune <- function(
 	row.names = FALSE, 
 	...) {
 	sumX <- summary(x);
-	cat('\nThe best model based on', names(sumX)[1], 'is', names(sumX[[1]])[1], '\b,', 'with parameter(s) and mpTune performance:\n\n');
+	cat('\nThe best model based on', names(sumX)[1], 'is', names(sumX[[1]])[1]);
+	cat(', with parameter(s) and mpTune performance:\n\n');
 	print(sumX[[1]][[1]], digits = digits, row.names = row.names, ...);
 	cat('\n');
 

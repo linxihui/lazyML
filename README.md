@@ -1,3 +1,11 @@
+---
+output: 
+  html_document:
+    keep_md: true
+---
+
+
+
 # lazyML
 
 An R package aims to automatically select models and tune parameters, built upon the popular package caret.
@@ -7,13 +15,15 @@ It also has functionality to give an unbiased performance estimate of the `mpTun
 
 Currently, classification, regression and survival models are supported.
 
-
 # Install
+
+
 
 ```r
 library(devtools);
 install_github('linxihui/lazyML');
 ```
+
 
 # Short Tutorial
 
@@ -69,10 +79,10 @@ print(sonarTuned)
 
 ```
 ## 
-## The best model based on AUC is svmRadial , with parameter(s) and mpTune performance:
+## The best model based on AUC is **svmRadial**, with parameter(s) and mpTune performance:
 ## 
 ##    sigma     C    AUC    BAC  Kappa  AUC SD  BAC SD Kappa SD
-##  0.02245 10.39 0.9783 0.8849 0.7732 0.01081 0.06241   0.1212
+##  0.02245 10.39 0.9783 0.8678 0.7403 0.01081 0.03708  0.07202
 ## 
 ## No failure.
 ```
@@ -93,20 +103,20 @@ summary(sonarTuned)
 ##         + sigma : 0.022 [0.007, 0.022]
 ##         + C     : 10.387 [2.328, 10.387]
 ##         + AUC   : 0.978 (0.011)
-##         + BAC   : 0.885 (0.062)
-##         + Kappa : 0.773 (0.121)
+##         + BAC   : 0.868 (0.037)
+##         + Kappa : 0.740 (0.072)
 ##     - rf :
 ##         + mtry  : 2 [2, 60]
-##         + AUC   : 0.962 (0.014)
-##         + BAC   : 0.877 (0.025)
-##         + Kappa : 0.757 (0.047)
+##         + AUC   : 0.972 (0.016)
+##         + BAC   : 0.902 (0.024)
+##         + Kappa : 0.806 (0.049)
 ##     - gbm :
-##         + shrinkage         : 0.005 [0.002, 0.170]
-##         + interaction.depth : 1 [1, 5]
+##         + shrinkage         : 0.002 [0.002, 0.170]
+##         + interaction.depth : 5 [1, 5]
 ##         + n.trees           : 5000 [50, 5000]
-##         + AUC               : 0.960 (0.022)
-##         + BAC               : 0.854 (0.041)
-##         + Kappa             : 0.709 (0.085)
+##         + AUC               : 0.961 (0.023)
+##         + BAC               : 0.877 (0.000)
+##         + Kappa             : 0.757 (0.002)
 ##     - nb :
 ##         + usekernel : TRUE {FALSE, TRUE}
 ##         + fL        : 0 
@@ -115,23 +125,23 @@ summary(sonarTuned)
 ##         + Kappa     : 0.677 (0.074)
 ## - BAC :
 ##     - rf :
-##         + mtry  : 7 [2, 60]
-##         + AUC   : 0.961 (0.019)
-##         + BAC   : 0.886 (0.036)
-##         + Kappa : 0.773 (0.076)
-##     - svmRadial :
-##         + sigma : 0.022 [0.007, 0.022]
-##         + C     : 10.387 [2.328, 10.387]
-##         + AUC   : 0.978 (0.011)
-##         + BAC   : 0.885 (0.062)
-##         + Kappa : 0.773 (0.121)
+##         + mtry  : 2 [2, 60]
+##         + AUC   : 0.972 (0.016)
+##         + BAC   : 0.902 (0.024)
+##         + Kappa : 0.806 (0.049)
 ##     - gbm :
-##         + shrinkage         : 0.17 [0.002, 0.170]
-##         + interaction.depth : 1 [1, 5]
-##         + n.trees           : 2525 [50, 5000]
-##         + AUC               : 0.953 (0.036)
-##         + BAC               : 0.879 (0.048)
-##         + Kappa             : 0.758 (0.098)
+##         + shrinkage         : 0.002 [0.002, 0.170]
+##         + interaction.depth : 5 [1, 5]
+##         + n.trees           : 5000 [50, 5000]
+##         + AUC               : 0.961 (0.023)
+##         + BAC               : 0.877 (0.000)
+##         + Kappa             : 0.757 (0.002)
+##     - svmRadial :
+##         + sigma : 0.01 [0.007, 0.022]
+##         + C     : 2.328 [2.328, 10.387]
+##         + AUC   : 0.957 (0.019)
+##         + BAC   : 0.870 (0.050)
+##         + Kappa : 0.742 (0.099)
 ##     - nb :
 ##         + usekernel : TRUE {FALSE, TRUE}
 ##         + fL        : 0 
@@ -139,24 +149,24 @@ summary(sonarTuned)
 ##         + BAC       : 0.839 (0.038)
 ##         + Kappa     : 0.677 (0.074)
 ## - Kappa :
-##     - svmRadial :
-##         + sigma : 0.022 [0.007, 0.022]
-##         + C     : 10.387 [2.328, 10.387]
-##         + AUC   : 0.978 (0.011)
-##         + BAC   : 0.885 (0.062)
-##         + Kappa : 0.773 (0.121)
 ##     - rf :
-##         + mtry  : 7 [2, 60]
-##         + AUC   : 0.961 (0.019)
-##         + BAC   : 0.886 (0.036)
-##         + Kappa : 0.773 (0.076)
+##         + mtry  : 2 [2, 60]
+##         + AUC   : 0.972 (0.016)
+##         + BAC   : 0.902 (0.024)
+##         + Kappa : 0.806 (0.049)
 ##     - gbm :
-##         + shrinkage         : 0.17 [0.002, 0.170]
-##         + interaction.depth : 1 [1, 5]
-##         + n.trees           : 2525 [50, 5000]
-##         + AUC               : 0.953 (0.036)
-##         + BAC               : 0.879 (0.048)
-##         + Kappa             : 0.758 (0.098)
+##         + shrinkage         : 0.002 [0.002, 0.170]
+##         + interaction.depth : 5 [1, 5]
+##         + n.trees           : 5000 [50, 5000]
+##         + AUC               : 0.961 (0.023)
+##         + BAC               : 0.877 (0.000)
+##         + Kappa             : 0.757 (0.002)
+##     - svmRadial :
+##         + sigma : 0.01 [0.007, 0.022]
+##         + C     : 2.328 [2.328, 10.387]
+##         + AUC   : 0.957 (0.019)
+##         + BAC   : 0.870 (0.050)
+##         + Kappa : 0.742 (0.099)
 ##     - nb :
 ##         + usekernel : TRUE {FALSE, TRUE}
 ##         + fL        : 0 
@@ -185,10 +195,10 @@ bestModel
 
 ```
 ## 
-## The best model based on AUC is svmRadial , with parameter(s) and mpTune performance:
+## Model **svmRadial** is chosen, with parameter(s) tuned based on AUC:
 ## 
 ##    sigma     C    AUC    BAC  Kappa  AUC SD  BAC SD Kappa SD
-##  0.02245 10.39 0.9783 0.8849 0.7732 0.01081 0.06241   0.1212
+##  0.02245 10.39 0.9783 0.8678 0.7403 0.01081 0.03708  0.07202
 ```
 
 Predict on new sample
@@ -196,12 +206,6 @@ Predict on new sample
 
 ```r
 sonarTestPred <- predict(bestModel, newdata = testing);
-```
-
-```
-## Warning in method$predict(modelFit = modelFit, newdata = newdata,
-## submodels = param): kernlab class prediction calculations failed;
-## returning NAs
 ```
 
 Since we have tune on a list of models, each of which has a list of hyper-parameter configurations, the performance of the best
@@ -216,13 +220,13 @@ sonarTunedPerf
 
 ```
 ## Resampled performance:
-##                 [,1]    [,2]    [,3]
-## Mean         0.93719 0.83871 0.67788
-## SD           0.02726 0.04672 0.09526
-## resampleSize 3.00000 3.00000 3.00000
+##                  AUC     BAC  Kappa
+## Mean         0.93644 0.83038 0.6616
+## SD           0.02853 0.06083 0.1227
+## resampleSize 3.00000 3.00000 3.0000
 ## Mean Spearson correlation of model ranks between resamples: 
-##                      AUC       BAC     Kappa
-## resample consistency 0.6 0.7333333 0.7333333
+##                            AUC       BAC     Kappa
+## resample consistency 0.7333333 0.7333333 0.8333333
 ```
 
 You can also check the mean correlation of model ranking among the outer resamples.
@@ -233,8 +237,8 @@ checkConsistency(sonarTunedPerf);
 ```
 
 ```
-##                      AUC       BAC     Kappa
-## resample consistency 0.6 0.7333333 0.7333333
+##                            AUC       BAC     Kappa
+## resample consistency 0.7333333 0.7333333 0.8333333
 ```
 
 
@@ -274,22 +278,16 @@ survTune <- mpTune(
 	gridLength = 2,
 	randomizedLength = 3
 	);
-```
 
-```
-## Loading required namespace: mboost
-```
-
-```r
 print(survTune);
 ```
 
 ```
 ## 
-## The best model based on C-index is survivalForest , with parameter(s) and mpTune performance:
+## The best model based on C-index is **survivalForest**, with parameter(s) and mpTune performance:
 ## 
 ##  mtry C-index Spearman Pearson C-index SD Spearman SD Pearson SD
-##     2  0.8196   0.5631  0.5465    0.05747      0.3048     0.3333
+##     2  0.8191   0.5585  0.5616    0.05234      0.2932     0.3287
 ## 
 ## No failure.
 ```
@@ -305,22 +303,22 @@ summary(survTune, metric = 'C-index');
 ## - C-index :
 ##     - survivalForest :
 ##         + mtry     : 2 [2, 17]
-##         + C-index  : 0.820 (0.057)
-##         + Spearman : 0.563 (0.305)
-##         + Pearson  : 0.547 (0.333)
-##     - gbm :
-##         + shrinkage         : 0.001 [0.001, 0.105]
-##         + interaction.depth : 5 [2, 5]
-##         + n.trees           : 50 [50, 5000]
-##         + C-index           : 0.796 (0.080)
-##         + Spearman          : 0.420 (0.380)
-##         + Pearson           : 0.353 (0.311)
+##         + C-index  : 0.819 (0.052)
+##         + Spearman : 0.558 (0.293)
+##         + Pearson  : 0.562 (0.329)
 ##     - elasticnet :
 ##         + alpha    : 0 [0.000, 1.000]
 ##         + lambda   : 0.334 [0.005, 2.495]
 ##         + C-index  : 0.788 (0.064)
 ##         + Spearman : 0.527 (0.274)
 ##         + Pearson  : 0.485 (0.238)
+##     - gbm :
+##         + shrinkage         : 0.026 [0.001, 0.105]
+##         + interaction.depth : 2 [2, 5]
+##         + n.trees           : 50 [50, 5000]
+##         + C-index           : 0.787 (0.063)
+##         + Spearman          : 0.359 (0.345)
+##         + Pearson           : 0.367 (0.346)
 ##     - Cox :
 ##         + parameter : none 
 ##         + C-index   : 0.739 (0.067)

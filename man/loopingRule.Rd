@@ -48,7 +48,7 @@ Its return value must be a list. Therefore, \code{bas::lapply}, \code{parallel::
 and send its jobs by batches, with batchSize = 3 as default. One can also execute jobs (<=batchSize) in a node with multiple cores,
 by setting \code{mc.cores} > 1. But since only at more \code{batchSize} jobs running on a node at a time, \code{mc.cores} must be less
 or equal to \code{batchSize}. It is usually disencouraged to use many cores in a single node in openMPI jobs, as it may crash a node (heavy load).
-To use 2 cores on one node, one can use the \code{\link{modifyFunction}}, like \code{\modifyFunction(foreachLoop, mc.cores = 2L)}.
+To use 2 cores on one node, one can use the \code{\link{modifyFunction}}, like \code{modifyFunction(foreachLoop, mc.cores = 2L)}.
 
 The default looping rule is the foreachLoop, which sends one job to one node or core at a time and execute the next one if one registered node
 or core is available. If no backend registered, \code{foreachBatchLoop} and \code{foreachLoop} execute jobs sequentially.

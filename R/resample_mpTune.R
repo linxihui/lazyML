@@ -90,7 +90,7 @@ resample.mpTune <- function(
 				)
 			);
 
-		pred <- predictionFunction(
+		pred <- caret::predictionFunction(
 			method   = bestFit$modelInfo,
 			modelFit = bestFit$fit,
 			newdata  = x[-this.sample, , drop = FALSE],
@@ -100,7 +100,7 @@ resample.mpTune <- function(
 
 		prob <- NULL;
 		if (tuneObj$config$mpTnControl$classProbs && !is.null(bestFit$modelInfo$prob) && !is.null(lev)) {
-			prob <- probFunction(
+			prob <- caret::probFunction(
 				method   = bestFit$modelInfo,
 				modelFit = bestFit$fit,
 				newdata  = x[-this.sample, , drop = FALSE],
@@ -127,7 +127,7 @@ resample.mpTune <- function(
 		}
 
 	# check error
-	allResamplePerf <- foreach(this.result = resampleMpTune, this.resample = names(samples)) %op% {
+	resampleMpTune <- foreach(this.result = resampleMpTune, this.resample = names(samples)) %op% {
 		if (inherits(this.result, 'condition')) {
 			cat("Fail at resample:", this.resample, '\n');
 			print(this.result);
@@ -143,6 +143,7 @@ resample.mpTune <- function(
 	tryCatch(
 		expr = {
 			allResamplePerf <- t(sapply(resampleMpTune, '[[', 'perf'));
+			colnames(allResamplePerf) <- obj$performanceMetric;
 			
 			meanPerf <- apply(
 					X = allResamplePerf, 

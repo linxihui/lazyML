@@ -1,3 +1,4 @@
+## More features
 - About mpTune:
 	+ track on start time, running time, memory usage, warning and error messages in the tuning loop and summary procedure.
 
@@ -10,6 +11,8 @@
 - a fit function to automatically fit the best models
 -  (DONE) CV or bootstrap for predictability estimate (support 2 levels of parallel)
 - print fitting progress?  Add logging: start time of the whole fiting, running time/memory of each model
+
+## feature interface
 
  ```{r}
  mpTune.default(
@@ -44,6 +47,7 @@
 mpTune.data(data, ...)
 # save all these controls as mpTuneControl
 
-Oneplus(data) %>% preProcess() %>% sampling() %>% sampling() %>% modelBlender(preProcess(), modelList, modelControl) %>% tuning(, performance()) %>% bestFit %>% run();
+# a flow like interface
+lazyML(data) %>% preProcess() %>% sampling() %>% modelBlender(preProcess(), modelList, modelControl) %>% tuning(, performance()) %>% bestFit %>% run();
 
  ```

@@ -39,7 +39,7 @@ NULL
 predict.bestMpTuneModel.formula <- function(object, newdata, type = c('raw', 'prob'), ...) {
 	type <- match.arg(type);
 	stopifnot(is.data.frame(newdata));
-	x <- model.matrix(as.formula(paste0(object$formula[1], object$formula[3])), newdata);
+	x <- model.matrix(object$formula[-2], newdata);
 	xint <- match("(Intercept)", colnames(x), nomatch = 0);
 	if (xint > 0) x <- x[, -xint, drop = FALSE];
 	return(predict.bestMpTuneModel(object, x, type = type, ...));
@@ -72,7 +72,8 @@ predict.bestMpTuneModel <- function(object, newdata, type = c('raw', 'prob'), ..
 #' @rdname bestMpTuneModel
 #' @export print.bestMpTuneModel
 print.bestMpTuneModel <- function(x, digits = 4, row.names = FALSE, ...) {
-	cat('\nThe best model based on', x$selectionMetric, 'is', x$modelName, '\b,', 'with parameter(s) and mpTune performance:\n\n');
+	cat('\nThe best model based on', x$selectionMetric, 'is', x$modelName);
+	cat(', with parameter(s) and mpTune performance:\n\n');
 	print(x$mpTunePerformance, digits = digits, row.names = row.names, ...);
 	cat('\n');
 	invisible(NULL);
@@ -84,7 +85,7 @@ print.bestMpTuneModel <- function(x, digits = 4, row.names = FALSE, ...) {
 #' @export print.resampledMpTune
 print.resampledMpTune = function(x, digits = 4, ...) {
 	cat('Resampled performance:\n');
-	print(x$meanPerformance, digits = digits, ...);;;;
+	print(x$meanPerformance, digits = digits, ...);
 	cat('Mean Spearson correlation of model ranks between resamples: \n');
 	print(checkConsistency(x));
 	invisible(x$meanPerformance);

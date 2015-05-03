@@ -134,6 +134,7 @@ mpTune <- function(x, ...) UseMethod('mpTune');
 #' @rdname mpTune
 #' @export mpTune.formula
 mpTune.formula <- function(formula, data, weights = NULL, ...) {
+	formula <- stats::formula(terms(formula, data = data));
 	mf <- model.frame(formula, data);
 	x <- model.matrix(formula, data);
 	y <- model.response(mf);

@@ -1,11 +1,3 @@
----
-output: 
-  html_document:
-    keep_md: true
----
-
-
-
 # lazyML
 
 An R package aims to automatically select models and tune parameters, built upon the popular package caret.

@@ -72,8 +72,8 @@ predict.bestMpTuneModel <- function(object, newdata, type = c('raw', 'prob'), ..
 #' @rdname bestMpTuneModel
 #' @export print.bestMpTuneModel
 print.bestMpTuneModel <- function(x, digits = 4, row.names = FALSE, ...) {
-	cat('\nThe best model based on', x$selectionMetric, 'is', x$modelName);
-	cat(', with parameter(s) and mpTune performance:\n\n');
+	cat('\nModel', paste0('**', x$modelName, '**'), 'is chosen, with parameter(s) tuned based on', x$selectionMetric);
+	cat(':\n\n');
 	print(x$mpTunePerformance, digits = digits, row.names = row.names, ...);
 	cat('\n');
 	invisible(NULL);

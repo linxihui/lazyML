@@ -58,7 +58,7 @@ predict.bestMpTuneModel <- function(object, newdata, type = c('raw', 'prob'), ..
 			preProc  = object$preProcess,
 			param    = NULL
 			),
-		prob <- caret::probFunction(
+		prob = caret::probFunction(
 			method   = object$modelInfo,
 			modelFit = object$fit,
 			newdata  = newdata,

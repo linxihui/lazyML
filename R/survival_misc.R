@@ -60,7 +60,7 @@ predict.coxph <- function(
 	type <- match.arg(type);
 	if (!(type %in% c('median', 'mean', 'prob'))) {
 		return(survival:::predict.coxph(object, newdata, type, ...));
-	}
+		}
 	#
 	train.link <- survival:::predict.coxph(object);
 	fit <- survfit(coxph(object$y ~ offset(train.link - mean(train.link)), method = 'breslow'));
@@ -100,21 +100,14 @@ survival.quantiles <- function(surv.percentile = 0.5, prediction, times, max.sur
 		prediction <- NULL;
 	} else {
 		names(percentile) <- paste0(100*percentile, '%');
-		prediction <- sapply(  X = percentile, 
-							 FUN = function(p) { 
-								apply(prediction, 1, function(s) times[s <= p][1])
-							 });
+		prediction <- sapply(
+			X = percentile, 
+			FUN = function(p) { 
+				apply(prediction, 1, function(s) times[s <= p][1])
+				}
+			);
 		}
 	out <- cbind(prediction, 'mean' = mean.time);
 	if (1 == ncol(out)) out <- out[,1];
 	return(out);
 	}
-
-
-# plot.surv.predict <- function(times, surv) {
-# 	xyplot(
-# 		   as.formula(
-# 					  paste(paste(names(surv), collapse = '+'), '~ times')
-# 					  ), data = data.frame(times = times, surv)
-# 		   )
-# 	}

@@ -8,12 +8,12 @@ Maintainer: Eric Xihui Lin <xihuil.silence@gmail.com>
 Depends:
     R (>= 3.0.1),
     plyr,
-    survival
+    survival,
+    pROC
 Imports:
     foreach,
     caret,
-    parallel,
-    pROC
+    parallel
 Suggests:
     doMC,
     randomForest,

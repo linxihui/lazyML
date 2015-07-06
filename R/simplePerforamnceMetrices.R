@@ -50,7 +50,7 @@ NULL
 	}
 
 .twoClassSummaryAUC = function(response, prediction) {
-		return(roc.default(response, prediction, direction = '<')$auc[1])
+		return(roc(response, prediction, direction = '<')$auc[1])
 	}
 
 #' @rdname metric

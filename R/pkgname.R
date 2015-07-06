@@ -13,7 +13,6 @@ NULL
 
 
 #' @importFrom caret checkInstall probFunction predictionFunction
-#' @importFrom pROC roc.default
 #' @importFrom parallel mclapply parLapply parLapplyLB
 #' @import foreach
 NULL

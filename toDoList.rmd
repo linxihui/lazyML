@@ -1,6 +1,8 @@
 ## More features
 - About mpTune:
 	+ track on start time, running time, memory usage, warning and error messages in the tuning loop and summary procedure.
+	+ trace
+	+ retained predictions, and used for ensemble
 
 - survival support and test (remember that some prediciton gives risk instead of survival time!)
 	+ survival support and test (DONE!)
@@ -11,6 +13,14 @@
 - a fit function to automatically fit the best models
 -  (DONE) CV or bootstrap for predictability estimate (support 2 levels of parallel)
 - print fitting progress?  Add logging: start time of the whole fiting, running time/memory of each model
+- resample: trace
+- requireMetric: partial match, built-in individule metric visible
+
+
+## Individual model
+- gbm: verbose disable by default
+- glmnet2: fix problem, check if a level has only two unique value
+- rf: mtry range
 
 ## feature interface
 
@@ -24,8 +34,8 @@
 	preProcessControl = list(FUN = PCA, nPC = c(2,3,4), ...),
 	tuningControl = list(
 		tuneGrid = list(rf = ....), 
-		gridLength = 5, randomizedLength = 20,
 		FUN = makeTuneGrid,
+		gridLength = 5, randomizedLength = 20, # other parameter for makTuneGrid
 		...),
 	samplingControl = list(
 		FUN = createCVFolds, args = ..., 
@@ -37,12 +47,11 @@
 		metric = NA,
 		targetMetric = 'AUC'),
 	parallelControl = list(backend = 'doMC', batchSize = 10),
-	extraControl = list(
-		classProbs = TRUE, 
-		survivalPrediction = 'risk', 
-		returnData = TRUE,
-		returnPrediction = TRUE,
-		seeds = NA)
+	classProbs = TRUE, 
+	survivalPrediction = 'risk', 
+	returnData = TRUE,
+	returnPrediction = TRUE,
+	seeds = NA
 	);
 mpTune.data(data, ...)
 # save all these controls as mpTuneControl

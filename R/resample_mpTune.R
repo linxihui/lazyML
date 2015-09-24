@@ -17,10 +17,12 @@
 #' @param parallelResampling Should resampling fitting be parallelled (not implemented yet)
 #' @param samplingFunction   Any function that returns a list of indices for training
 #' @param ...                Further arguments to be passed to \code{\link{resampling}}
-#' @return A 'resampledMpTune' object with entries: \cr
-#' 		$ aggregatePerformance: a data.frame gives an aggregated (over resamples) performance \cr
-#' 		$ allResamplePerformance: a data.frame gives detail performance on earch resample \cr
-#' 		$ sampleIndex: a list of resample indices for training \cr
+#' @return A 'resampledMpTune' object with entries
+#'     \itemize{
+#'         \item{aggregatePerformance}{a data.frame gives an aggregated (over resamples) performance}
+#'         \item{allResamplePerformance}{a data.frame gives detail performance on earch resample}
+#'         \item{sampleIndex}{a list of resample indices for training}
+#'     }
 #'
 #' @seealso See \code{\link{mpTune}} for examples
 #' @export

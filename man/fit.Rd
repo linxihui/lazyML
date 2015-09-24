@@ -32,13 +32,15 @@ fit(obj, ...)
 \item{model}{An interger or model name indicating which model to fit. Default to 1, the best model}
 }
 \value{
-A 'bestMpTuneModel' or 'bestMpTuneModel.formula' object with entries: \cr
-        $ fit: model fit \cr
-        $ preProc \cr
-        $ modelName \cr
-        $ modelInfo: a list of models fitting, predict information, as from caret \cr
-        $ selectionMetric: the performace matric used to select the best model \cr
-        $ mpTunePerformance: performance of best model in the mpTune object \cr
+A 'bestMpTuneModel' or 'bestMpTuneModel.formula' object with entries:
+    \itemize{
+        \item{fit}{model fit}
+        \item{preProc}{}
+        \item{modelName}{}
+        \item{modelInfo}{a list of models fitting, predict information, as from caret}
+        \item{selectionMetric}{the performace matric used to select the best model}
+        \item{mpTunePerformance}{performance of best model in the mpTune object}
+    }
 }
 \description{
 fit the best model according to \code{\link{mpTune}}

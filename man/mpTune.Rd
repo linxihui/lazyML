@@ -52,20 +52,25 @@ See ?loopingRule for detail on these functions}
 \item{verbose}{Should fitting message be displayed if any}
 }
 \value{
-a list with class 'mpTune' or 'mpTune.formula' (inherits of 'mpTune') containing the following entries \cr
-        $ allModelsPerformance: a list of lists (length = number of models) of all tried model-parameter combinations, not ranked \cr
-        $ allCVs: a list of lists of all tried model-parameter-fold combinations, not ranked \cr
-        $ sampleIndex: a list of cross validation folds. Each fold is a validation or test set, and its complementary set is the training \cr
-        $ data: list(x, y, weights) or list(formula, data, weights) mpTnControl$returnData if TRUE (default) \cr
-        $ performanceMetric: performance matrix used, which is specified in mpTune$summaryFunction \cr
-        $ config: a list of \cr
-            $ sampleIndex: a list of resample used for tuning  \cr
-            $ models: a list of models as specified \cr
-            $ modelControl: a list of further arguments as specifed  \cr
-            $ mpTnControl: a 'mpTuneControl' object as specifed \cr
-            $ preProcess: a 'preProcess' object as specified \cr
-            $ gridLength: a vector of gridLength as specifed \cr
-            $ randomizedLength: a vector of randomized research as specifed \cr
+a list with class 'mpTune' or 'mpTune.formula' (inherits of 'mpTune') containing the following entries
+		\itemize{
+        \item{allModelsPerformance}{a list of lists (length = number of models) of all tried model-parameter combinations, not ranked}
+        \item{allCVs}{a list of lists of all tried model-parameter-fold combinations, not ranked}
+        \item{sampleIndex}{a list of cross validation folds. Each fold is a validation or test set, and its complementary set is the training}
+        \item{data}{list(x, y, weights) or list(formula, data, weights) mpTnControl$returnData if TRUE (default)}
+        \item{performanceMetric}{performance matrix used, which is specified in mpTune$summaryFunction}
+        \item{config}{a list of
+            \itemize{
+                \item{sampleIndex}{a list of resample used for tuning}
+                \item{models}{a list of models as specified}
+                \item{modelControl}{a list of further arguments as specifed}
+                \item{mpTnControl}{a 'mpTuneControl' object as specifed}
+                \item{preProcess}{a 'preProcess' object as specified}
+                \item{gridLength}{a vector of gridLength as specifed}
+                \item{randomizedLength}{a vector of randomized research as specifed}
+                }
+            }
+        }
 }
 \description{
 Tuning multiple models and hyper-parameter using grid search or randomized search, in a optional parallel fashion.

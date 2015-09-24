@@ -44,10 +44,12 @@ resample(obj, ...)
 \item{parallelResampling}{Should resampling fitting be parallelled (not implemented yet)}
 }
 \value{
-A 'resampledMpTune' object with entries: \cr
-		$ aggregatePerformance: a data.frame gives an aggregated (over resamples) performance \cr
-		$ allResamplePerformance: a data.frame gives detail performance on earch resample \cr
-		$ sampleIndex: a list of resample indices for training \cr
+A 'resampledMpTune' object with entries
+    \itemize{
+        \item{aggregatePerformance}{a data.frame gives an aggregated (over resamples) performance}
+        \item{allResamplePerformance}{a data.frame gives detail performance on earch resample}
+        \item{sampleIndex}{a list of resample indices for training}
+    }
 }
 \description{
 Resample (e.g., cross validation, cross validation) to estimate the true performance

@@ -12,7 +12,9 @@ NULL
 
 
 
-#' @importFrom caret checkInstall probFunction predictionFunction
+# @importFrom caret checkInstall probFunction predictionFunction
+
 #' @importFrom parallel mclapply parLapply parLapplyLB
+#' @import caret
 #' @import foreach
 NULL

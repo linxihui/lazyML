@@ -8,13 +8,15 @@
 #' @param data    Ata if not in \code{obj}
 #' @param model   An interger or model name indicating which model to fit. Default to 1, the best model
 #' @param ...     Further arguments to be passed to \code{\link{summary.mpTune}}
-#' @return A 'bestMpTuneModel' or 'bestMpTuneModel.formula' object with entries: \cr
-#'         $ fit: model fit \cr
-#'         $ preProc \cr
-#'         $ modelName \cr
-#'         $ modelInfo: a list of models fitting, predict information, as from caret \cr
-#'         $ selectionMetric: the performace matric used to select the best model \cr
-#'         $ mpTunePerformance: performance of best model in the mpTune object \cr
+#' @return A 'bestMpTuneModel' or 'bestMpTuneModel.formula' object with entries:
+#'     \itemize{
+#'         \item{fit}{model fit}
+#'         \item{preProc}{}
+#'         \item{modelName}{}
+#'         \item{modelInfo}{a list of models fitting, predict information, as from caret}
+#'         \item{selectionMetric}{the performace matric used to select the best model}
+#'         \item{mpTunePerformance}{performance of best model in the mpTune object}
+#'     }
 #' @seealso See \code{\link{mpTune}} for examples
 #' @export
 fit <- function(obj, ...) UseMethod('fit');

@@ -1,5 +1,8 @@
 # lazyML
 
+[![Build Status](https://api.travis-ci.org/linxihui/lazyML.png?branch=master)](https://travis-ci.org/linxihui/lazyML)
+[![Coverage Status](http://codecov.io/github/linxihui/lazyML/coverage.svg?branch=master)](http://codecov.io/github/linxihui/lazyML?branch=master)
+
 An R package aims to automatically select models and tune parameters, built upon the popular package caret.
 
 The main function `mpTune` can tune hyper-parameters of a list of models simultaneously with parallel support.
